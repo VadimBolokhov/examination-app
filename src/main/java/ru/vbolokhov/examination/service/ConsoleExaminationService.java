@@ -1,23 +1,40 @@
 package ru.vbolokhov.examination.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
 import ru.vbolokhov.examination.domain.Answer;
 import ru.vbolokhov.examination.domain.Question;
 import ru.vbolokhov.examination.domain.Result;
 import ru.vbolokhov.examination.domain.Student;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Console based implementation for ExaminationService.
  * @author Vadim Bolokhov
  */
+@Service
 public class ConsoleExaminationService implements ExaminationService {
 
     private Scanner scanner = new Scanner(System.in);
 
+    private Map<Integer, Locale> locales = new HashMap<>();
+
+    private Locale currentLocale = Locale.ENGLISH;
+
+    @Autowired
+    public ConsoleExaminationService(MessageSource messageSource) {
+        this.locales.put(1, Locale.ENGLISH);
+        this.locales.put(2, new Locale("ru", "RU"));
+        this.messageSource = messageSource;
+    }
+
+    private MessageSource messageSource;
+
     @Override
     public Result performExamination(List<Question> questions) {
+        this.setLocale();
         Result result = new Result(this.getStudent());
         int correctAnswers = 0;
         for (Question question : questions) {
@@ -27,40 +44,66 @@ public class ConsoleExaminationService implements ExaminationService {
             }
             result.addAnswer(question, id);
         }
-        System.out.println(
-                String.format("You answered correctly %d of %d questions",
-                        correctAnswers,
-                        questions.size()));
+        this.showMessage(
+                "info.result",
+                new String[] {String.valueOf(correctAnswers), String.valueOf(questions.size())}
+                );
         return result;
     }
 
+    private void setLocale() {
+        System.out.println("Choose your language:");
+        System.out.println("\t1. English");
+        System.out.println("\t2. Русский");
+        int select = this.getValidAnswer(2);
+        this.currentLocale = this.locales.get(select);
+    }
+
+    private int getValidAnswer(int max) {
+        int userAnswer = -1;
+        boolean valid = false;
+        do {
+            String input = scanner.nextLine();
+            try {
+                userAnswer = Integer.parseInt(input);
+                if (userAnswer > 0 && userAnswer <= max) {
+                    valid = true;
+                } else {
+                    this.showMessage("ask.valid");
+                }
+            } catch (NumberFormatException e) {
+                this.showMessage("ask.int");
+            }
+        } while (!valid);
+        return userAnswer;
+    }
+
     private Student getStudent() {
-        System.out.println("Enter your first name:");
+        this.showMessage("ask.firstname");
         String firstname = this.scanner.nextLine();
-        System.out.println("Enter your last name:");
+        this.showMessage("ask.lastname");
         String lastname = this.scanner.nextLine();
-        return new Student(firstname, lastname);
+        return new Student(firstname.trim(), lastname.trim());
+    }
+
+    private void showMessage(String property) {
+        this.showMessage(property, null);
+    }
+
+    private void showMessage(String property, String[] params) {
+        System.out.println(
+                this.messageSource.getMessage(
+                        property,
+                        params,
+                        this.currentLocale
+                )
+        );
     }
 
     private int getAnswer(Question question) {
         this.showQuestion(question);
-        int answerId = -1;
-        boolean valid = false;
-        while (!valid) {
-            String input = scanner.nextLine();
-            try {
-                int userAnswer = Integer.parseInt(input);
-                if (userAnswer > 0 && userAnswer <= question.getAnswers().size()) {
-                    answerId = question.getAnswers().get(userAnswer - 1).getId();
-                    valid = true;
-                } else {
-                    System.out.println("Please enter valid value");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter integer value");
-            }
-        }
-        return answerId;
+        int userAnswer = this.getValidAnswer(question.getAnswers().size());
+        return question.getAnswers().get(userAnswer - 1).getId();
     }
 
     private void showQuestion(Question question) {

@@ -8,10 +8,7 @@ import ru.vbolokhov.examination.domain.Question;
 import ru.vbolokhov.examination.domain.Result;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -25,15 +22,19 @@ public class ConsoleExaminationServiceTest {
 
     private PrintStream stdOut = System.out;
 
+    private ConsoleExaminationService service;
+
     @Before
     public void setUp() {
         String input = new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
+                .add("1")
                 .add("John")
                 .add("Johnson")
                 .add("1")
                 .toString();
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         System.setOut(new PrintStream(new ByteArrayOutputStream()));
+        this.service = new ConsoleExaminationService(new StubMessageSource());
     }
 
     @After
@@ -50,8 +51,7 @@ public class ConsoleExaminationServiceTest {
         question.setCorrectId(1);
         List<Question> list = new ArrayList<>();
         list.add(question);
-        ConsoleExaminationService service = new ConsoleExaminationService();
-        Result result = service.performExamination(list);
+        Result result = this.service.performExamination(list);
         Map<Question, Integer> resultMap = result.getResultMap();
         assertEquals(result.getStudent().getFirstname(), "John");
         assertEquals(result.getStudent().getLastname(), "Johnson");
