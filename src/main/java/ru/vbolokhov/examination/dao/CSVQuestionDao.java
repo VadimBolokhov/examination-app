@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import ru.vbolokhov.examination.annotation.Loggable;
 import ru.vbolokhov.examination.domain.Answer;
 import ru.vbolokhov.examination.domain.Question;
 
@@ -63,6 +64,7 @@ public class CSVQuestionDao implements QuestionDao {
         return Integer.parseInt(index);
     }
 
+    @Loggable
     @Override
     public List<Question> getQuestions() {
         return this.questions;

@@ -16,6 +16,7 @@ import java.util.List;
  * @author Vadim Bolokhov
  */
 @ComponentScan
+@EnableAspectJAutoProxy
 @PropertySource("classpath:app.properties")
 public class Main {
 
