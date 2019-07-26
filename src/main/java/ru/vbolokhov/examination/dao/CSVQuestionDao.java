@@ -4,14 +4,17 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import ru.vbolokhov.examination.domain.Answer;
 import ru.vbolokhov.examination.domain.Question;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * CSV file based implementation for QuestionDAO interface.
@@ -94,10 +97,5 @@ public class CSVQuestionDao implements QuestionDao {
         throw new UnsupportedOperationException(
                 "Current implementation of DAO interface does not support deleting entities."
         );
-    }
-
-    @Bean
-    public static PropertyPlaceholderConfigurer propertyConfigInDev() {
-        return new PropertyPlaceholderConfigurer();
     }
 }

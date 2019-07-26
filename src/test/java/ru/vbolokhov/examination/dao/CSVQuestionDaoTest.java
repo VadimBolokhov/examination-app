@@ -8,8 +8,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for CSVQuestionDao.

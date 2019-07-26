@@ -7,10 +7,16 @@ import ru.vbolokhov.examination.domain.Answer;
 import ru.vbolokhov.examination.domain.Question;
 import ru.vbolokhov.examination.domain.Result;
 
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for ConsoleExaminationService.

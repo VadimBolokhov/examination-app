@@ -6,7 +6,8 @@ import ru.vbolokhov.examination.dao.QuestionDao;
 import ru.vbolokhov.examination.domain.Answer;
 import ru.vbolokhov.examination.domain.Question;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for SimpleQuestionService.

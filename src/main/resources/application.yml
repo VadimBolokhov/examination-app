@@ -1,0 +1,6 @@
+locale:
+  ENGLISH
+
+questions:
+  path: src/main/resources/questions.csv
+
