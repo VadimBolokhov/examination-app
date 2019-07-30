@@ -4,3 +4,6 @@ locale:
 questions:
   path: src/main/resources/questions.csv
 
+application:
+  UI: console
+

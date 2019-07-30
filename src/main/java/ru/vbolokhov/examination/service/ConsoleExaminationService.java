@@ -1,6 +1,7 @@
 package ru.vbolokhov.examination.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.vbolokhov.examination.domain.Answer;
@@ -15,6 +16,10 @@ import java.util.*;
  * @author Vadim Bolokhov
  */
 @Service
+@ConditionalOnProperty(
+        value = "application.UI",
+        havingValue = "console"
+)
 public class ConsoleExaminationService implements ExaminationService {
 
     private Scanner scanner = new Scanner(System.in);
@@ -23,14 +28,14 @@ public class ConsoleExaminationService implements ExaminationService {
 
     private Locale currentLocale = Locale.ENGLISH;
 
+    private MessageSource messageSource;
+
     @Autowired
     public ConsoleExaminationService(MessageSource messageSource) {
         this.locales.put(1, Locale.ENGLISH);
         this.locales.put(2, new Locale("ru", "RU"));
         this.messageSource = messageSource;
     }
-
-    private MessageSource messageSource;
 
     @Override
     public Result performExamination(List<Question> questions) {
